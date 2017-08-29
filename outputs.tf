@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 output name {
   description = "Pass through of input `name`."
   value       = "${var.name}"

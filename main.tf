@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 resource "google_compute_instance_template" "default" {
   count       = "${var.module_enabled ? 1 : 0}"
   project     = "${var.project}"
@@ -43,14 +43,8 @@ resource "google_compute_instance_template" "default" {
   }
 
   service_account {
-    email = "default"
-
-    scopes = [
-      "https://www.googleapis.com/auth/compute",
-      "https://www.googleapis.com/auth/logging.write",
-      "https://www.googleapis.com/auth/monitoring.write",
-      "https://www.googleapis.com/auth/devstorage.full_control",
-    ]
+    email  = "${var.service_account_email}"
+    scopes = ["${var.service_account_scopes}"]
   }
 
   metadata = "${merge(

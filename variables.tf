@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 variable module_enabled {
   description = ""
   default     = true
@@ -118,4 +118,21 @@ variable depends_id {
 variable local_cmd_destroy {
   description = "Command to run on destroy as local-exec provisioner for the instance group manager."
   default     = ":"
+}
+
+variable service_account_email {
+  description = "The email of the service account for the instance template."
+  default     = "default"
+}
+
+variable service_account_scopes {
+  description = "List of scopes for the instance template service account"
+  type        = "list"
+
+  default = [
+    "https://www.googleapis.com/auth/compute",
+    "https://www.googleapis.com/auth/logging.write",
+    "https://www.googleapis.com/auth/monitoring.write",
+    "https://www.googleapis.com/auth/devstorage.full_control",
+  ]
 }

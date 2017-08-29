@@ -48,6 +48,8 @@ module "mig1" {
 - `depends_id` (optional): The ID of a resource that the instance group depends on. This is added as metadata `tf_depends_id` on each instance.
 - `local_cmd_destroy` (optional): Command to run on destroy as local-exec provisioner for the instance group manager.
 - `module_enabled` (optional): Boolean input used to toggle creation of this modules resources.
+- `service_account_email` (optional): The email of the service account for the instance template. Default is `default`.
+- `service_account_scopes` (optional): List of scopes for the instance template service account. Default is `["compute", "logging.write", "monitoring.write", "devstorage.full_control"]`
 
 ### Output variables 
 
