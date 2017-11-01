@@ -58,7 +58,7 @@ resource "google_compute_instance_template" "default" {
 }
 
 resource "google_compute_instance_group_manager" "default" {
-  count       = "${var.module_enabled ? 1 : 0}"
+  count       = "${var.module_enabled && var.zonal ? 1 : 0}"
   project     = "${var.project}"
   name        = "${var.name}"
   description = "compute VM Instance Group"
@@ -73,7 +73,61 @@ resource "google_compute_instance_group_manager" "default" {
 
   target_pools = ["${var.target_pools}"]
 
-  target_size = "${var.size}"
+  target_size = "${var.autoscaling ? 0 : var.size}"
+
+  named_port {
+    name = "${var.service_port_name}"
+    port = "${var.service_port}"
+  }
+
+  auto_healing_policies {
+    health_check      = "${google_compute_health_check.mig-health-check.self_link}"
+    initial_delay_sec = "${var.hc_initial_delay}"
+  }
+
+  provisioner "local-exec" {
+    when    = "destroy"
+    command = "${var.local_cmd_destroy}"
+  }
+}
+
+resource "google_compute_autoscaler" "default" {
+  count  = "${var.module_enabled && var.autoscaling && var.zonal ? 1 : 0}"
+  name   = "${var.name}"
+  zone   = "${var.zone}"
+  target = "${google_compute_instance_group_manager.default.self_link}"
+
+  autoscaling_policy = {
+    max_replicas    = "${var.max_replicas}"
+    min_replicas    = "${var.min_replicas}"
+    cooldown_period = "${var.cooldown_period}"
+
+    cpu_utilization {
+      target = "${var.cpu_utilization}"
+    }
+  }
+}
+
+resource "google_compute_region_instance_group_manager" "default" {
+  count       = "${var.module_enabled && ! var.zonal ? 1 : 0}"
+  project     = "${var.project}"
+  name        = "${var.name}"
+  description = "compute VM Instance Group"
+
+  base_instance_name = "${var.name}"
+
+  instance_template = "${google_compute_instance_template.default.self_link}"
+
+  region = "${var.region}"
+
+  target_pools = ["${var.target_pools}"]
+
+  target_size = "${var.autoscaling ? 0 : var.size}"
+
+  auto_healing_policies {
+    health_check      = "${google_compute_health_check.mig-health-check.self_link}"
+    initial_delay_sec = "${var.hc_initial_delay}"
+  }
 
   named_port {
     name = "${var.service_port_name}"
@@ -83,6 +137,23 @@ resource "google_compute_instance_group_manager" "default" {
   provisioner "local-exec" {
     when    = "destroy"
     command = "${var.local_cmd_destroy}"
+  }
+}
+
+resource "google_compute_region_autoscaler" "default" {
+  count  = "${var.module_enabled && var.autoscaling && ! var.zonal ? 1 : 0}"
+  name   = "${var.name}"
+  region = "${var.region}"
+  target = "${google_compute_region_instance_group_manager.default.self_link}"
+
+  autoscaling_policy = {
+    max_replicas    = "${var.max_replicas}"
+    min_replicas    = "${var.min_replicas}"
+    cooldown_period = "${var.cooldown_period}"
+
+    cpu_utilization {
+      target = "${var.cpu_utilization}"
+    }
   }
 }
 
@@ -104,4 +175,34 @@ resource "google_compute_firewall" "default-ssh" {
 
   source_ranges = ["0.0.0.0/0"]
   target_tags   = ["allow-ssh"]
+}
+
+resource "google_compute_health_check" "mig-health-check" {
+  count = "${var.http_health_check ? 1 : 0}"
+  name = "${var.name}"
+
+  check_interval_sec  = "${var.hc_interval}"
+  timeout_sec         = "${var.hc_timeout}"
+  healthy_threshold   = "${var.hc_healthy_threshold}"
+  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
+
+  http_health_check {
+    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
+    request_path = "${var.hc_path}"
+  }
+}
+
+resource "google_compute_firewall" "mig-health-check" {
+  count   = "${var.http_health_check ? 1 : 0}"
+  project = "${var.project}"
+  name    = "${var.name}-vm-hc"
+  network = "${var.network}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["${var.service_port}"]
+  }
+
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  target_tags   = ["${var.target_tags}"]
 }

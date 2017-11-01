@@ -48,3 +48,8 @@ output network_ip {
   description = "Pass through of input `network_ip`."
   value       = "${var.network_ip}"
 }
+
+output health_check {
+  description = "The healthcheck for the managed instance group"
+  value = "${google_compute_health_check.mig-health-check.self_link}"
+}
