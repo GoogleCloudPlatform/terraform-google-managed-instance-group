@@ -56,5 +56,5 @@ output network_ip {
 
 output health_check {
   description = "The healthcheck for the managed instance group"
-  value = "${google_compute_health_check.mig-health-check.self_link}"
+  value       = "${google_compute_health_check.mig-health-check.self_link}"
 }

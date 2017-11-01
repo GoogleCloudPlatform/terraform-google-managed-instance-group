@@ -26,10 +26,11 @@ resource "google_compute_instance_template" "default" {
   tags = "${concat(list("allow-ssh"), var.target_tags)}"
 
   network_interface {
-    network       = "${var.subnetwork == "" ? var.network : ""}"
-    subnetwork    = "${var.subnetwork}"
-    access_config = ["${var.access_config}"]
-    network_ip    = "${var.network_ip}"
+    network            = "${var.subnetwork == "" ? var.network : ""}"
+    subnetwork         = "${var.subnetwork}"
+    access_config      = ["${var.access_config}"]
+    network_ip         = "${var.network_ip}"
+    subnetwork_project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   }
 
   can_ip_forward = "${var.can_ip_forward}"
@@ -98,13 +99,12 @@ resource "google_compute_autoscaler" "default" {
   target = "${google_compute_instance_group_manager.default.self_link}"
 
   autoscaling_policy = {
-    max_replicas    = "${var.max_replicas}"
-    min_replicas    = "${var.min_replicas}"
-    cooldown_period = "${var.cooldown_period}"
-
-    cpu_utilization {
-      target = "${var.cpu_utilization}"
-    }
+    max_replicas               = "${var.max_replicas}"
+    min_replicas               = "${var.min_replicas}"
+    cooldown_period            = "${var.cooldown_period}"
+    cpu_utilization            = ["${var.autoscaling_cpu}"]
+    metric                     = ["${var.autoscaling_metric}"]
+    load_balancing_utilization = ["${var.autoscaling_lb}"]
   }
 }
 
@@ -122,7 +122,9 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   target_pools = ["${var.target_pools}"]
 
-  target_size = "${var.autoscaling ? 0 : var.size}"
+  // There is no way to unset target_size when autoscaling is true so for now, jsut use the min_replicas value.
+  // Issue: https://github.com/terraform-providers/terraform-provider-google/issues/667
+  target_size = "${var.autoscaling ? var.min_replicas : var.size}"
 
   auto_healing_policies {
     health_check      = "${google_compute_health_check.mig-health-check.self_link}"
@@ -147,13 +149,12 @@ resource "google_compute_region_autoscaler" "default" {
   target = "${google_compute_region_instance_group_manager.default.self_link}"
 
   autoscaling_policy = {
-    max_replicas    = "${var.max_replicas}"
-    min_replicas    = "${var.min_replicas}"
-    cooldown_period = "${var.cooldown_period}"
-
-    cpu_utilization {
-      target = "${var.cpu_utilization}"
-    }
+    max_replicas               = "${var.max_replicas}"
+    min_replicas               = "${var.min_replicas}"
+    cooldown_period            = "${var.cooldown_period}"
+    cpu_utilization            = ["${var.autoscaling_cpu}"]
+    metric                     = ["${var.autoscaling_metric}"]
+    load_balancing_utilization = ["${var.autoscaling_lb}"]
   }
 }
 
@@ -164,7 +165,7 @@ resource "null_resource" "dummy_dependency" {
 
 resource "google_compute_firewall" "default-ssh" {
   count   = "${var.module_enabled ? 1 : 0}"
-  project = "${var.project}"
+  project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-ssh"
   network = "${var.network}"
 
@@ -179,7 +180,7 @@ resource "google_compute_firewall" "default-ssh" {
 
 resource "google_compute_health_check" "mig-health-check" {
   count = "${var.http_health_check ? 1 : 0}"
-  name = "${var.name}"
+  name  = "${var.name}"
 
   check_interval_sec  = "${var.hc_interval}"
   timeout_sec         = "${var.hc_timeout}"
@@ -194,7 +195,7 @@ resource "google_compute_health_check" "mig-health-check" {
 
 resource "google_compute_firewall" "mig-health-check" {
   count   = "${var.http_health_check ? 1 : 0}"
-  project = "${var.project}"
+  project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-hc"
   network = "${var.network}"
 

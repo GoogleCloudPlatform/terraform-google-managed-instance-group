@@ -44,6 +44,11 @@ variable subnetwork {
   default     = "default"
 }
 
+variable subnetwork_project {
+  description = "The project the subnetwork belongs to. If not set, var.project is used instead."
+  default     = ""
+}
+
 variable name {
   description = "Name of the managed instance group."
 }
@@ -139,72 +144,85 @@ variable service_account_scopes {
 
 variable zonal {
   description = "Create a single-zone managed instance group. If false, a regional managed instance group is created."
-  default = true
+  default     = true
 }
 
 /* Autoscaling */
 variable autoscaling {
   description = "Enable autoscaling."
-  default = false
+  default     = false
 }
 
 variable max_replicas {
   description = "Autoscaling, max replicas."
-  default = 5
+  default     = 5
 }
 
 variable min_replicas {
   description = "Autoscaling, min replics."
-  default = 1
+  default     = 1
 }
 
 variable cooldown_period {
   description = "Autoscaling, cooldown period in seconds."
-  default = 60
+  default     = 60
 }
 
-variable cpu_utilization {
-  description = "Autoscaling, cpu utilization threshold."
-  default = 0.5
+variable autoscaling_cpu {
+  description = "Autoscaling, cpu utilization policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#cpu_utilization"
+  type        = "list"
+  default     = []
+}
+
+variable autoscaling_metric {
+  description = "Autoscaling, metric policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#metric"
+  type        = "list"
+  default     = []
+}
+
+variable autoscaling_lb {
+  description = "Autoscaling, load balancing utilization policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#load_balancing_utilization"
+  type        = "list"
+  default     = []
 }
 
 /* Health checks */
 variable http_health_check {
   description = "Enable or disable the http health check for auto healing."
-  default = true
+  default     = true
 }
 
 variable hc_initial_delay {
   description = "Health check, intial delay in seconds."
-  default = 300
+  default     = 300
 }
 
 variable hc_interval {
   description = "Health check, check interval in seconds."
-  default = 30
+  default     = 30
 }
 
 variable hc_timeout {
   description = "Health check, timeout in seconds."
-  default = 10
+  default     = 10
 }
 
 variable hc_healthy_threshold {
   description = "Health check, healthy threshold."
-  default = 1
+  default     = 1
 }
 
 variable hc_unhealthy_threshold {
   description = "Health check, unhealthy threshold."
-  default = 10
+  default     = 10
 }
 
 variable hc_port {
   description = "Health check, health check port, if different from var.service_port, if not given, var.service_port is used."
-  default = ""
+  default     = ""
 }
 
 variable hc_path {
   description = "Health check, the http path to check."
-  default = "/"
+  default     = "/"
 }
