@@ -24,6 +24,11 @@ output instance_group {
   value       = "${google_compute_instance_group_manager.default.instance_group}"
 }
 
+output region_instance_group {
+  description = "Link to the `instance_group` property of the region instance group manager resource."
+  value       = "${google_compute_region_instance_group_manager.default.instance_group}"
+}
+
 output target_tags {
   description = "Pass through of input `target_tags`."
   value       = "${var.target_tags}"
