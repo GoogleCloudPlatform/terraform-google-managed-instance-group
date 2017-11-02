@@ -95,10 +95,11 @@ resource "google_compute_instance_group_manager" "default" {
 }
 
 resource "google_compute_autoscaler" "default" {
-  count  = "${var.module_enabled && var.autoscaling && var.zonal ? 1 : 0}"
-  name   = "${var.name}"
-  zone   = "${var.zone}"
-  target = "${google_compute_instance_group_manager.default.self_link}"
+  count   = "${var.module_enabled && var.autoscaling && var.zonal ? 1 : 0}"
+  name    = "${var.name}"
+  zone    = "${var.zone}"
+  project = "${var.project}"
+  target  = "${google_compute_instance_group_manager.default.self_link}"
 
   autoscaling_policy = {
     max_replicas               = "${var.max_replicas}"
@@ -145,10 +146,11 @@ resource "google_compute_region_instance_group_manager" "default" {
 }
 
 resource "google_compute_region_autoscaler" "default" {
-  count  = "${var.module_enabled && var.autoscaling && ! var.zonal ? 1 : 0}"
-  name   = "${var.name}"
-  region = "${var.region}"
-  target = "${google_compute_region_instance_group_manager.default.self_link}"
+  count   = "${var.module_enabled && var.autoscaling && ! var.zonal ? 1 : 0}"
+  name    = "${var.name}"
+  region  = "${var.region}"
+  project = "${var.project}"
+  target  = "${google_compute_region_instance_group_manager.default.self_link}"
 
   autoscaling_policy = {
     max_replicas               = "${var.max_replicas}"
@@ -181,8 +183,9 @@ resource "google_compute_firewall" "default-ssh" {
 }
 
 resource "google_compute_health_check" "mig-health-check" {
-  count = "${var.http_health_check ? 1 : 0}"
-  name  = "${var.name}"
+  count   = "${var.http_health_check ? 1 : 0}"
+  name    = "${var.name}"
+  project = "${var.project}"
 
   check_interval_sec  = "${var.hc_interval}"
   timeout_sec         = "${var.hc_timeout}"
