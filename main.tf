@@ -83,8 +83,8 @@ resource "google_compute_instance_group_manager" "default" {
     port = "${var.service_port}"
   }
 
-  auto_healing_policies {
-    health_check      = "${google_compute_health_check.mig-health-check.self_link}"
+  auto_healing_policies = {
+    health_check      = "${var.http_health_check ? element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0) : ""}"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
@@ -129,7 +129,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   target_size = "${var.autoscaling ? var.min_replicas : var.size}"
 
   auto_healing_policies {
-    health_check      = "${google_compute_health_check.mig-health-check.self_link}"
+    health_check      = "${var.http_health_check ? element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0) : ""}"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
