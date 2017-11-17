@@ -92,6 +92,12 @@ resource "google_compute_instance_group_manager" "default" {
     when    = "destroy"
     command = "${var.local_cmd_destroy}"
   }
+
+  provisioner "local-exec" {
+    when        = "create"
+    command     = "${var.local_cmd_create}"
+    interpreter = ["sh", "-c"]
+  }
 }
 
 resource "google_compute_autoscaler" "default" {
@@ -143,6 +149,12 @@ resource "google_compute_region_instance_group_manager" "default" {
     when    = "destroy"
     command = "${var.local_cmd_destroy}"
   }
+
+  provisioner "local-exec" {
+    when        = "create"
+    command     = "${var.local_cmd_create}"
+    interpreter = ["sh", "-c"]
+  }
 }
 
 resource "google_compute_region_autoscaler" "default" {
@@ -163,8 +175,13 @@ resource "google_compute_region_autoscaler" "default" {
 }
 
 resource "null_resource" "dummy_dependency" {
-  count      = "${var.module_enabled ? 1 : 0}"
+  count      = "${var.module_enabled && var.zonal ? 1 : 0}"
   depends_on = ["google_compute_instance_group_manager.default"]
+}
+
+resource "null_resource" "region_dummy_dependency" {
+  count      = "${var.module_enabled && ! var.zonal ? 1 : 0}"
+  depends_on = ["google_compute_region_instance_group_manager.default"]
 }
 
 resource "google_compute_firewall" "default-ssh" {
@@ -211,4 +228,18 @@ resource "google_compute_firewall" "mig-health-check" {
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
   target_tags   = ["${var.target_tags}"]
+}
+
+data "google_compute_instance_group" "zonal" {
+  count   = "${var.zonal ? 1 : 0}"
+  name    = "${google_compute_instance_group_manager.default.name}"
+  zone    = "${var.zone}"
+  project = "${var.project}"
+}
+
+data "google_compute_instance_group" "regional" {
+  count   = "${ ! var.zonal ? 1 : 0}"
+  name    = "${google_compute_region_instance_group_manager.default.name}"
+  zone    = "${var.zone}"
+  project = "${var.project}"
 }
