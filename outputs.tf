@@ -36,7 +36,7 @@ output region_instance_group {
 
 output region_instances {
   description = "List of instances in the region instance group. Note that this can change dynamically depending on the current number of instances in the group and may be empty the first time read."
-  value = "${data.google_compute_instance_group.regional.instances}"
+  value       = "${data.google_compute_instance_group.regional.instances}"
 }
 
 output target_tags {
@@ -61,7 +61,7 @@ output depends_id {
 
 output region_depends_id {
   description = "Id of the dummy dependency created used for intra-module dependency creation with regional groups."
-  value = "${null_resource.region_dummy_dependency.id}"
+  value       = "${null_resource.region_dummy_dependency.id}"
 }
 
 output network_ip {
