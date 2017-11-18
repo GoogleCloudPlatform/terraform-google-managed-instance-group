@@ -223,7 +223,7 @@ resource "google_compute_firewall" "mig-health-check" {
 
   allow {
     protocol = "tcp"
-    ports    = ["${var.service_port}"]
+    ports    = ["${var.hc_port == "" ? var.service_port : var.hc_port}"]
   }
 
   source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
