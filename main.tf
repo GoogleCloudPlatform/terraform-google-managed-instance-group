@@ -236,10 +236,3 @@ data "google_compute_instance_group" "zonal" {
   zone    = "${var.zone}"
   project = "${var.project}"
 }
-
-data "google_compute_instance_group" "regional" {
-  count   = "${ ! var.zonal ? 1 : 0}"
-  name    = "${google_compute_region_instance_group_manager.default.name}"
-  zone    = "${var.zone}"
-  project = "${var.project}"
-}

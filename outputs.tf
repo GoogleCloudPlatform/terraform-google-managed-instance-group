@@ -34,11 +34,6 @@ output region_instance_group {
   value       = "${google_compute_region_instance_group_manager.default.instance_group}"
 }
 
-output region_instances {
-  description = "List of instances in the region instance group. Note that this can change dynamically depending on the current number of instances in the group and may be empty the first time read."
-  value       = "${data.google_compute_instance_group.regional.instances}"
-}
-
 output target_tags {
   description = "Pass through of input `target_tags`."
   value       = "${var.target_tags}"
