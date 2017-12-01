@@ -29,7 +29,7 @@ resource "google_compute_instance_template" "default" {
     network            = "${var.subnetwork == "" ? var.network : ""}"
     subnetwork         = "${var.subnetwork}"
     access_config      = ["${var.access_config}"]
-    network_ip         = "${var.network_ip}"
+    address            = "${var.network_ip}"
     subnetwork_project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   }
 
