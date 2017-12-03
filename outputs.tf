@@ -21,17 +21,17 @@ output name {
 
 output instance_group {
   description = "Link to the `instance_group` property of the instance group manager resource."
-  value       = "${google_compute_instance_group_manager.default.instance_group}"
+  value       = "${element(concat(google_compute_instance_group_manager.default.*.instance_group, list("")), 0)}"
 }
 
 output instances {
   description = "List of instances in the instance group. Note that this can change dynamically depending on the current number of instances in the group and may be empty the first time read."
-  value       = "${data.google_compute_instance_group.zonal.instances}"
+  value       = "${data.google_compute_instance_group.zonal.*.instances}"
 }
 
 output region_instance_group {
   description = "Link to the `instance_group` property of the region instance group manager resource."
-  value       = "${google_compute_region_instance_group_manager.default.instance_group}"
+  value       = "${element(concat(google_compute_region_instance_group_manager.default.*.instance_group, list("")), 0)}"
 }
 
 output target_tags {
@@ -51,12 +51,12 @@ output service_port_name {
 
 output depends_id {
   description = "Id of the dummy dependency created used for intra-module dependency creation with zonal groups."
-  value       = "${null_resource.dummy_dependency.id}"
+  value       = "${element(concat(null_resource.dummy_dependency.*.id, list("")), 0)}"
 }
 
 output region_depends_id {
   description = "Id of the dummy dependency created used for intra-module dependency creation with regional groups."
-  value       = "${null_resource.region_dummy_dependency.id}"
+  value       = "${element(concat(null_resource.region_dummy_dependency.*.id, list("")), 0)}"
 }
 
 output network_ip {
@@ -66,5 +66,5 @@ output network_ip {
 
 output health_check {
   description = "The healthcheck for the managed instance group"
-  value       = "${google_compute_health_check.mig-health-check.self_link}"
+  value       = "${element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0)}"
 }

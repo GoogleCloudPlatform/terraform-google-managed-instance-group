@@ -95,6 +95,11 @@ variable compute_image {
   default     = "debian-cloud/debian-8"
 }
 
+variable update_strategy {
+  description = "The strategy to apply when the instance template changes."
+  default = "RESTART"
+}
+
 variable service_port {
   description = "Port the service is listening on."
 }

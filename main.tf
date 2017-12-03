@@ -23,7 +23,7 @@ resource "google_compute_instance_template" "default" {
 
   region = "${var.region}"
 
-  tags = "${concat(list("allow-ssh"), var.target_tags)}"
+  tags = ["${concat(list("allow-ssh"), var.target_tags)}"]
 
   network_interface {
     network            = "${var.subnetwork == "" ? var.network : ""}"
@@ -70,7 +70,7 @@ resource "google_compute_instance_group_manager" "default" {
 
   zone = "${var.zone}"
 
-  update_strategy = "RESTART"
+  update_strategy = "${var.update_strategy}"
 
   target_pools = ["${var.target_pools}"]
 
