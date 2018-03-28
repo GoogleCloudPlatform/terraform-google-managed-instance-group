@@ -87,6 +87,13 @@ resource "google_compute_instance_group_manager" "default" {
     health_check      = "${var.http_health_check ? element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0) : ""}"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
+  rolling_update_policy {
+    type = "PROACTIVE"
+    minimal_action = "REPLACE"
+    max_surge_percent = 20
+    max_unavailable_fixed = 2
+    min_ready_sec = 50
+  }
 
   provisioner "local-exec" {
     when    = "destroy"

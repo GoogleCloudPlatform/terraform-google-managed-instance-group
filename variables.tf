@@ -96,8 +96,8 @@ variable compute_image {
 }
 
 variable update_strategy {
-  description = "The strategy to apply when the instance template changes."
-  default = "RESTART"
+  description = "The strategy to apply when the instance template changes. See https://www.terraform.io/docs/providers/google/r/compute_instance_group_manager.html#update_strategy"
+  default = "ROLLING_UPDATE"
 }
 
 variable service_port {
