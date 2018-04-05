@@ -23,6 +23,7 @@ module "mig1" {
   target_pools      = ["${module.gce-lb-fr.target_pool}"]
   target_tags       = ["allow-service1"]
   startup_script    = "${data.template_file.php-startup-script.rendered}"
+  ssh_source_ranges = ["0.0.0.0/0"]
 }
 ```
 
