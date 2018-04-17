@@ -97,7 +97,7 @@ variable compute_image {
 
 variable update_strategy {
   description = "The strategy to apply when the instance template changes."
-  default = "RESTART"
+  default     = "RESTART"
 }
 
 variable service_port {
@@ -155,6 +155,12 @@ variable service_account_scopes {
 variable zonal {
   description = "Create a single-zone managed instance group. If false, a regional managed instance group is created."
   default     = true
+}
+
+variable ssh_source_ranges {
+  description = "Network ranges to allow SSH from"
+  type        = "list"
+  default     = ["0.0.0.0/0"]
 }
 
 /* Autoscaling */

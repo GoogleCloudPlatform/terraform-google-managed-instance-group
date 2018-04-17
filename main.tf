@@ -195,7 +195,7 @@ resource "google_compute_firewall" "default-ssh" {
     ports    = ["22"]
   }
 
-  source_ranges = ["0.0.0.0/0"]
+  source_ranges = ["${var.ssh_source_ranges}"]
   target_tags   = ["allow-ssh"]
 }
 
