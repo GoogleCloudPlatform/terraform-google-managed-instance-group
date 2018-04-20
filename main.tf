@@ -23,7 +23,9 @@ resource "google_compute_instance_template" "default" {
 
   region = "${var.region}"
 
-  tags = ["${concat(list("allow-ssh"), var.target_tags)}"]
+  labels = "${var.target_labels}"
+
+  tags = ["${compact(concat(list(var.ssh_firewall_enabled ? "allow-ssh" : ""), var.target_tags))}"]
 
   network_interface {
     network            = "${var.subnetwork == "" ? var.network : ""}"
@@ -185,7 +187,7 @@ resource "null_resource" "region_dummy_dependency" {
 }
 
 resource "google_compute_firewall" "default-ssh" {
-  count   = "${var.module_enabled ? 1 : 0}"
+  count   = "${var.module_enabled && var.ssh_firewall_enabled ? 1 : 0}"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-ssh"
   network = "${var.network}"
