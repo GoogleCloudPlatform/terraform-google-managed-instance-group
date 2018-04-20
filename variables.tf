@@ -114,6 +114,12 @@ variable target_tags {
   default     = ["allow-service"]
 }
 
+variable target_labels {
+  description = "Labels added to instances."
+  type        = "map"
+  default     = {}
+}
+
 variable target_pools {
   description = "The target load balancing pools to assign this group to."
   type        = "list"

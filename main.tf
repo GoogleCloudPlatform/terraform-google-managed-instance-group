@@ -23,6 +23,8 @@ resource "google_compute_instance_template" "default" {
 
   region = "${var.region}"
 
+  labels = "${var.target_labels}"
+
   tags = ["${concat(list("allow-ssh"), var.target_tags)}"]
 
   network_interface {
