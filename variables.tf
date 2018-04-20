@@ -163,6 +163,11 @@ variable zonal {
   default     = true
 }
 
+variable ssh_firewall_enabled {
+  description = ""
+  default     = true
+}
+
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
   type        = "list"
