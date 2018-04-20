@@ -25,7 +25,7 @@ resource "google_compute_instance_template" "default" {
 
   labels = "${var.target_labels}"
 
-  tags = ["${concat(list(var.ssh_firewall_enabled ? "allow-ssh" : ""), var.target_tags)}"]
+  tags = ["${concat(var.ssh_firewall_enabled ? list("allow-ssh") : [], var.target_tags)}"]
 
   network_interface {
     network            = "${var.subnetwork == "" ? var.network : ""}"
