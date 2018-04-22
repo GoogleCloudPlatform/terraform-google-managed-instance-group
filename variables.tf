@@ -95,6 +95,11 @@ variable compute_image {
   default     = "debian-cloud/debian-8"
 }
 
+variable wait_for_instances {
+  description = "Wait for all instances to be created/updated before returning"
+  default     = false
+}
+
 variable update_strategy {
   description = "The strategy to apply when the instance template changes."
   default     = "RESTART"
