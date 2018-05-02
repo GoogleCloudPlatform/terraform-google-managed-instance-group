@@ -17,7 +17,7 @@
 resource "google_compute_instance_template" "default" {
   count   = "${var.module_enabled ? 1 : 0}"
   project = "${var.project}"
-  name    = "${random_id.rand.dec}"
+  name_prefix = "${random_id.rand.dec}"
 
   machine_type = "${var.machine_type}"
 
