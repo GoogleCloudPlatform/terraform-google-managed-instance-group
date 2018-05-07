@@ -162,6 +162,14 @@ resource "google_compute_region_instance_group_manager" "default" {
     command     = "${var.local_cmd_create}"
     interpreter = ["sh", "-c"]
   }
+  update_strategy         = "ROLLING_UPDATE"
+  wait_for_instances      = true
+  rolling_update_policy {
+    type                  = "PROACTIVE"
+    minimal_action        = "REPLACE"
+    max_surge_fixed       = "${var.autoscaling ? var.min_replicas : var.size}"
+    max_unavailable_fixed = 0
+  }
 }
 
 resource "google_compute_region_autoscaler" "default" {
