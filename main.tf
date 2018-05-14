@@ -36,7 +36,7 @@ resource "google_compute_instance_template" "default" {
   can_ip_forward = "${var.can_ip_forward}"
 
   disk {
-    auto_delete  = true
+    auto_delete  = "${var.disk_auto_delete}"
     boot         = true
     source_image = "${var.compute_image}"
     type         = "PERSISTENT"

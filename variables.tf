@@ -168,6 +168,11 @@ variable ssh_source_ranges {
   default     = ["0.0.0.0/0"]
 }
 
+variable disk_auto_delete {
+  description = "Whether or not the disk should be auto-deleted."
+  default     = true
+}
+
 variable disk_type {
   description = "The GCE disk type. Can be either pd-ssd, local-ssd, or pd-standard."
   default     = "pd-ssd"
