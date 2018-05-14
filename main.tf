@@ -40,7 +40,8 @@ resource "google_compute_instance_template" "default" {
     boot         = true
     source_image = "${var.compute_image}"
     type         = "PERSISTENT"
-    disk_type    = "pd-ssd"
+    disk_type    = "${var.disk_type}"
+    disk_size_gb = "${var.disk_size_gb}"
   }
 
   service_account {

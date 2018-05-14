@@ -168,6 +168,16 @@ variable ssh_source_ranges {
   default     = ["0.0.0.0/0"]
 }
 
+variable disk_type {
+  description = "The GCE disk type. Can be either pd-ssd, local-ssd, or pd-standard."
+  default     = "pd-ssd"
+}
+
+variable disk_size_gb {
+  description = "The size of the image in gigabytes. If not specified, it will inherit the size of its base image."
+  default     = 0
+}
+
 /* Autoscaling */
 variable autoscaling {
   description = "Enable autoscaling."
