@@ -162,6 +162,12 @@ variable zonal {
   default     = true
 }
 
+variable distribution_policy_zones {
+  description = "The distribution policy for this managed instance group when zonal=false."
+  type        = "list"
+  default     = []
+}
+
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
   type        = "list"

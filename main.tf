@@ -120,16 +120,19 @@ resource "google_compute_autoscaler" "default" {
 }
 
 resource "google_compute_region_instance_group_manager" "default" {
-  count       = "${var.module_enabled && ! var.zonal ? 1 : 0}"
-  project     = "${var.project}"
-  name        = "${var.name}"
-  description = "compute VM Instance Group"
+  count              = "${var.module_enabled && ! var.zonal ? 1 : 0}"
+  project            = "${var.project}"
+  name               = "${var.name}"
+  description        = "compute VM Instance Group"
+  wait_for_instances = "${var.wait_for_instances}"
 
   base_instance_name = "${var.name}"
 
   instance_template = "${google_compute_instance_template.default.self_link}"
 
   region = "${var.region}"
+
+  distribution_policy_zones = ["${var.distribution_policy_zones}"]
 
   target_pools = ["${var.target_pools}"]
 
