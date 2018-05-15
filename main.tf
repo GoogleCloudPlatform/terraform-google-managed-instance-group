@@ -132,6 +132,10 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   region = "${var.region}"
 
+  update_strategy = "${var.update_strategy}"
+
+  rolling_update_policy = ["${var.rolling_update_policy}"]
+
   distribution_policy_zones = ["${var.distribution_policy_zones}"]
 
   target_pools = ["${var.target_pools}"]

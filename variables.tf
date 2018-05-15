@@ -105,6 +105,12 @@ variable update_strategy {
   default     = "RESTART"
 }
 
+variable rolling_update_policy {
+  description = "The rolling update policy when update_strategy is ROLLING_UPDATE"
+  type        = "list"
+  default     = []
+}
+
 variable service_port {
   description = "Port the service is listening on."
 }
