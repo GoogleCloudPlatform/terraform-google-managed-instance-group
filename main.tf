@@ -15,9 +15,9 @@
  */
 
 resource "google_compute_instance_template" "default" {
-  count   = "${var.module_enabled ? 1 : 0}"
-  project = "${var.project}"
-  name    = "${random_id.rand.dec}"
+  count       = "${var.module_enabled ? 1 : 0}"
+  project     = "${var.project}"
+  name_prefix = "default-"
 
   machine_type = "${var.machine_type}"
 
@@ -240,9 +240,4 @@ data "google_compute_instance_group" "zonal" {
   name    = "${google_compute_instance_group_manager.default.name}"
   zone    = "${var.zone}"
   project = "${var.project}"
-}
-
-resource "random_id" "rand" {
-  byte_length = 8
-  prefix      = "default-"
 }

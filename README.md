@@ -13,7 +13,8 @@ data "template_file" "php-startup-script" {
 }
 
 module "mig1" {
-  source            = "GoogleCloudPlatform/managed-instance-group/google"
+  source            = "GoogleCloudPlatform/managed-instance-group/google#v1.1.7"
+  version           = "1.1.7"
   region            = "${var.region}"
   zone              = "${var.zone}"
   name              = "group1"
@@ -26,6 +27,8 @@ module "mig1" {
   ssh_source_ranges = ["0.0.0.0/0"]
 }
 ```
+
+> NOTE: Make sure you are using [version pinning](https://www.terraform.io/docs/modules/usage.html#module-versions) to avoid unexpected changes when the module is updated.
 
 ## Resources created
 
