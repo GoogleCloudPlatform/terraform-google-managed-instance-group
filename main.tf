@@ -100,6 +100,10 @@ resource "google_compute_instance_group_manager" "default" {
     command     = "${var.local_cmd_create}"
     interpreter = ["sh", "-c"]
   }
+
+  lifecycle {
+    ignore_changes = ["instance_template", "distribution_policy_zone"]
+  }
 }
 
 resource "google_compute_autoscaler" "default" {
@@ -163,6 +167,10 @@ resource "google_compute_region_instance_group_manager" "default" {
     when        = "create"
     command     = "${var.local_cmd_create}"
     interpreter = ["sh", "-c"]
+  }
+
+  lifecycle {
+    ignore_changes = ["instance_template", "distribution_policy_zone"]
   }
 }
 
