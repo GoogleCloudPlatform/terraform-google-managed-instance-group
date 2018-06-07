@@ -234,11 +234,12 @@ variable autoscaling_lb {
   default     = []
 }
 
-/* Health checks */
-variable http_health_check {
-  description = "Enable or disable the http health check for auto healing."
-  default     = true
+variable health_check_type {
+  description = "Describes the type of health check required. Valid values are empty, HTTP or HTTPS"
+  default = "HTTP"
 }
+
+/* Health checks */
 
 variable hc_initial_delay {
   description = "Health check, intial delay in seconds."
