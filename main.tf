@@ -102,7 +102,7 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   lifecycle {
-    ignore_changes = ["instance_template", "distribution_policy_zone"]
+    ignore_changes = ["instance_template", "distribution_policy_zone", "target_size"]
   }
 }
 
@@ -170,7 +170,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   }
 
   lifecycle {
-    ignore_changes = ["instance_template", "distribution_policy_zone"]
+    ignore_changes = ["instance_template", "distribution_policy_zone", "target_size"]
   }
 }
 
