@@ -241,7 +241,7 @@ resource "google_compute_firewall" "mig-health-check" {
 
 data "google_compute_instance_group" "zonal" {
   count   = "${var.zonal ? 1 : 0}"
-  name    = "${google_compute_instance_group_manager.default.name}"
+  name    = "${element(concat(google_compute_instance_group_manager.default.*.name, list("unused")), 0)}"
   zone    = "${var.zone}"
   project = "${var.project}"
 }
