@@ -19,6 +19,11 @@ output name {
   value       = "${var.name}"
 }
 
+output instance_template {
+  description = "Link to the instance_template for the group"
+  value = "${google_compute_instance_template.default.*.self_link}"
+}
+
 output instance_group {
   description = "Link to the `instance_group` property of the instance group manager resource."
   value       = "${element(concat(google_compute_instance_group_manager.default.*.instance_group, list("")), 0)}"
