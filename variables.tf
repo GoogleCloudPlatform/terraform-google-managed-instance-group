@@ -128,7 +128,7 @@ variable target_tags {
 variable instance_labels {
   description = "Labels added to instances."
   type        = "map"
-  default     = {}  
+  default     = {}
 }
 
 variable target_pools {

@@ -76,8 +76,6 @@ resource "google_compute_instance_group_manager" "default" {
 
   update_strategy = "${var.update_strategy}"
 
-  rolling_update_policy = ["${var.rolling_update_policy}"]
-
   target_pools = ["${var.target_pools}"]
 
   // There is no way to unset target_size when autoscaling is true so for now, jsut use the min_replicas value.
