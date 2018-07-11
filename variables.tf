@@ -175,7 +175,7 @@ variable zonal {
 }
 
 variable distribution_policy_zones {
-  description = "The distribution policy for this managed instance group when zonal=false."
+  description = "The distribution policy for this managed instance group when zonal=false. Default is all zones in given region."
   type        = "list"
   default     = []
 }

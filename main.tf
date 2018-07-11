@@ -123,6 +123,17 @@ resource "google_compute_autoscaler" "default" {
   }
 }
 
+data "google_compute_zones" "available" {
+  region = "${var.region}"
+}
+
+locals {
+  distribution_zones = {
+    default = ["${data.google_compute_zones.available.names}"]
+    user    = ["${var.distribution_policy_zones}"]
+  }
+}
+
 resource "google_compute_region_instance_group_manager" "default" {
   count              = "${var.module_enabled && ! var.zonal ? 1 : 0}"
   project            = "${var.project}"
@@ -140,7 +151,7 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   rolling_update_policy = ["${var.rolling_update_policy}"]
 
-  distribution_policy_zones = ["${var.distribution_policy_zones}"]
+  distribution_policy_zones = ["${local.distribution_zones["${length(var.distribution_policy_zones) == 0 ? "default" : "user"}"]}"]
 
   target_pools = ["${var.target_pools}"]
 
