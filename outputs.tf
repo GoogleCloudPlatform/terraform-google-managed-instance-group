@@ -21,7 +21,7 @@ output name {
 
 output instance_template {
   description = "Link to the instance_template for the group"
-  value = "${google_compute_instance_template.default.*.self_link}"
+  value       = "${google_compute_instance_template.default.*.self_link}"
 }
 
 output instance_group {
