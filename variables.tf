@@ -102,7 +102,7 @@ variable wait_for_instances {
 
 variable update_strategy {
   description = "The strategy to apply when the instance template changes."
-  default     = "RESTART"
+  default     = "NONE"
 }
 
 variable rolling_update_policy {
@@ -128,7 +128,7 @@ variable target_tags {
 variable instance_labels {
   description = "Labels added to instances."
   type        = "map"
-  default     = {}  
+  default     = {}
 }
 
 variable target_pools {
@@ -175,7 +175,7 @@ variable zonal {
 }
 
 variable distribution_policy_zones {
-  description = "The distribution policy for this managed instance group when zonal=false."
+  description = "The distribution policy for this managed instance group when zonal=false. Default is all zones in given region."
   type        = "list"
   default     = []
 }
