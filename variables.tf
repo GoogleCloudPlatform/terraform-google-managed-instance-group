@@ -280,3 +280,8 @@ variable hc_path {
   description = "Health check, the http path to check."
   default     = "/"
 }
+
+variable ssh_fw_rule {
+  description = "Whether or not the SSH Firewall Rule should be created"
+  default = true
+}
