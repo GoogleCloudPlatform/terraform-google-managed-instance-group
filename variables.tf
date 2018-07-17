@@ -66,7 +66,10 @@ variable startup_script {
 variable access_config {
   description = "The access config block for the instances. Set to [] to remove external IP."
   type        = "list"
-  default     = [{}]
+
+  default = [
+    {},
+  ]
 }
 
 variable metadata {
@@ -178,6 +181,11 @@ variable distribution_policy_zones {
   description = "The distribution policy for this managed instance group when zonal=false. Default is all zones in given region."
   type        = "list"
   default     = []
+}
+
+variable ssh_allow_firewall {
+  description = "Whether or not the firewall rule for ssh should be created."
+  default     = true
 }
 
 variable ssh_source_ranges {
