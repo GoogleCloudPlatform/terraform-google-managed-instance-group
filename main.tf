@@ -122,7 +122,8 @@ resource "google_compute_autoscaler" "default" {
 }
 
 data "google_compute_zones" "available" {
-  region = "${var.region}"
+  project = "${var.project}"
+  region  = "${var.region}"
 }
 
 locals {
