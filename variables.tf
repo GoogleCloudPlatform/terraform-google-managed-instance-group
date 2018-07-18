@@ -183,8 +183,8 @@ variable distribution_policy_zones {
   default     = []
 }
 
-variable ssh_allow_firewall {
-  description = "Whether or not the firewall rule for ssh should be created."
+variable ssh_fw_rule {
+  description = "Whether or not the SSH Firewall Rule should be created"
   default     = true
 }
 

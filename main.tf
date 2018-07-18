@@ -30,7 +30,7 @@ resource "google_compute_instance_template" "default" {
 
   region = "${var.region}"
 
-  tags   = ["${local.ssh_firewall["${var.ssh_allow_firewall ? 0 : 1}"]}"]
+  tags   = ["${local.ssh_firewall["${var.ssh_fw_rule ? 0 : 1}"]}"]
   labels = "${var.instance_labels}"
 
   network_interface {
@@ -82,6 +82,8 @@ resource "google_compute_instance_group_manager" "default" {
 
   update_strategy = "${var.update_strategy}"
 
+  rolling_update_policy = ["${var.rolling_update_policy}"]
+
   target_pools = ["${var.target_pools}"]
 
   // There is no way to unset target_size when autoscaling is true so for now, jsut use the min_replicas value.
@@ -128,7 +130,8 @@ resource "google_compute_autoscaler" "default" {
 }
 
 data "google_compute_zones" "available" {
-  region = "${var.region}"
+  project = "${var.project}"
+  region  = "${var.region}"
 }
 
 locals {
@@ -213,7 +216,7 @@ resource "null_resource" "region_dummy_dependency" {
 }
 
 resource "google_compute_firewall" "default-ssh" {
-  count   = "${var.module_enabled && var.ssh_allow_firewall ? 1 : 0}"
+  count   = "${var.module_enabled && var.ssh_fw_rule ? 1 : 0}"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-ssh"
   network = "${var.network}"
