@@ -66,7 +66,10 @@ variable startup_script {
 variable access_config {
   description = "The access config block for the instances. Set to [] to remove external IP."
   type        = "list"
-  default     = [{}]
+
+  default = [
+    {},
+  ]
 }
 
 variable metadata {
@@ -180,6 +183,11 @@ variable distribution_policy_zones {
   default     = []
 }
 
+variable ssh_fw_rule {
+  description = "Whether or not the SSH Firewall Rule should be created"
+  default     = true
+}
+
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
   type        = "list"
@@ -279,9 +287,4 @@ variable hc_port {
 variable hc_path {
   description = "Health check, the http path to check."
   default     = "/"
-}
-
-variable ssh_fw_rule {
-  description = "Whether or not the SSH Firewall Rule should be created"
-  default     = true
 }

@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+locals {
+  ssh_firewall = [
+    "${concat(list("allow-ssh"), var.target_tags)}",
+    "${var.target_tags}",
+  ]
+}
+
 resource "google_compute_instance_template" "default" {
   count       = "${var.module_enabled ? 1 : 0}"
   project     = "${var.project}"
@@ -23,8 +30,7 @@ resource "google_compute_instance_template" "default" {
 
   region = "${var.region}"
 
-  tags = ["${concat(list("allow-ssh"), var.target_tags)}"]
-
+  tags   = ["${local.ssh_firewall["${var.ssh_fw_rule ? 0 : 1}"]}"]
   labels = "${var.instance_labels}"
 
   network_interface {
