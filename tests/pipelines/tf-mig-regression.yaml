@@ -1,0 +1,167 @@
+# Copyright 2017 Google Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+ 
+jobs:
+###
+# run-example-zonal
+###
+- name: run-example-zonal
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: run-example-zonal
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-managed-instance-group/
+      env_name: tf-ci-mig-zonal
+      example_dir: examples/zonal
+      region: us-central1
+      zone: us-central1-a
+      TF_VAR_network_name: tf-ci-mig-zonal
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-a
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    file: git/tests/tasks/example-mig.yaml
+
+###
+# run-example-regional
+###
+- name: run-example-regional
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: run-example-regional
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-managed-instance-group/
+      env_name: tf-ci-mig-regional
+      example_dir: examples/regional
+      region: us-central1
+      zone: us-central1-b
+      TF_VAR_network_name: tf-ci-mig-regional
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-b
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    file: git/tests/tasks/example-mig.yaml
+
+###
+# run-example-autoscaling
+###
+- name: run-example-autoscaling
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: run-example-autoscaling
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      compute_ssh_key: ((common.compute_ssh_key))
+      compute_ssh_pub: ((common.compute_ssh_pub))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-managed-instance-group/
+      env_name: tf-ci-mig-autoscaling
+      example_dir: examples/autoscaling
+      region: us-central1
+      zone: us-central1-c
+      TF_VAR_network_name: tf-ci-mig-autoscaling
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-c
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    file: git/tests/tasks/example-mig.yaml
+
+###
+# Resource types
+###
+resource_types:
+- name: git
+  type: docker-image
+  source:
+    repository: concourse/git-resource
+
+- name: time
+  type: docker-image
+  source:
+    repository: concourse/time-resource
+
+- name: email
+  type: docker-image
+  source:
+    repository: pcfseceng/email-resource
+
+###
+# Resources
+###
+resources:
+- name: git
+  type: git
+  source:
+    uri: {{uri}}
+    branch: {{branch}}
+
+- name: once-a-day
+  type: time
+  source:
+    interval: 1440m
+
+- name: send-an-email
+  type: email
+  source:
+    smtp:
+      host: ((common.smtp_host))
+      port: ((common.smtp_port))
+      username: ((common.smtp_username))
+      password: ((common.smtp_password))
+    from: concourse-tf@gcp.solutions
+    to: [ {{maintainer_email}} ]

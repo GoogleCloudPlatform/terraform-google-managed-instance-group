@@ -38,6 +38,7 @@ module "mig1" {
   name               = "${var.network_name}"
   wait_for_instances = true
   autoscaling        = true
+  http_health_check  = true
 
   autoscaling_cpu = [{
     target = 0.8
@@ -78,6 +79,10 @@ data "google_compute_region_instance_group" "mig1" {
   depends_on = ["null_resource.template"]
 }
 
-output "instance" {
+output "instance_self_link" {
   value = "${lookup(data.google_compute_region_instance_group.mig1.instances[0], "instance")}"
+}
+
+output "instance_status" {
+  value = "${lookup(data.google_compute_region_instance_group.mig1.instances[0], "status")}"
 }
