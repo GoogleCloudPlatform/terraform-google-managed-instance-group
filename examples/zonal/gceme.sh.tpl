@@ -1,7 +1,7 @@
 #!/bin/bash -xe
 
 apt-get update
-apt-get install -y apache2 php5
+apt-get install -y apache2 libapache2-mod-php
 
 # install lookbusy script to test autoscaling
 apt-get install -y build-essential git

@@ -102,7 +102,6 @@ resource "google_compute_instance_group_manager" "default" {
   provisioner "local-exec" {
     when        = "create"
     command     = "${var.local_cmd_create}"
-    interpreter = ["sh", "-c"]
   }
 }
 
@@ -178,7 +177,11 @@ resource "google_compute_region_instance_group_manager" "default" {
   provisioner "local-exec" {
     when        = "create"
     command     = "${var.local_cmd_create}"
-    interpreter = ["sh", "-c"]
+  }
+
+  // Initial instance verification can take 10-15m when a health check is present.
+  timeouts = {
+    create = "${var.http_health_check ? "15m" : "5m"}"
   }
 }
 
