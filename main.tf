@@ -100,8 +100,8 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   provisioner "local-exec" {
-    when        = "create"
-    command     = "${var.local_cmd_create}"
+    when    = "create"
+    command = "${var.local_cmd_create}"
   }
 }
 
@@ -175,8 +175,8 @@ resource "google_compute_region_instance_group_manager" "default" {
   }
 
   provisioner "local-exec" {
-    when        = "create"
-    command     = "${var.local_cmd_create}"
+    when    = "create"
+    command = "${var.local_cmd_create}"
   }
 
   // Initial instance verification can take 10-15m when a health check is present.
@@ -205,11 +205,19 @@ resource "google_compute_region_autoscaler" "default" {
 resource "null_resource" "dummy_dependency" {
   count      = "${var.module_enabled && var.zonal ? 1 : 0}"
   depends_on = ["google_compute_instance_group_manager.default"]
+
+  triggers = {
+    instance_template = "${element(google_compute_instance_template.default.*.self_link, 0)}"
+  }
 }
 
 resource "null_resource" "region_dummy_dependency" {
   count      = "${var.module_enabled && ! var.zonal ? 1 : 0}"
   depends_on = ["google_compute_region_instance_group_manager.default"]
+
+  triggers = {
+    instance_template = "${element(google_compute_instance_template.default.*.self_link, 0)}"
+  }
 }
 
 resource "google_compute_firewall" "default-ssh" {
@@ -260,7 +268,9 @@ resource "google_compute_firewall" "mig-health-check" {
 
 data "google_compute_instance_group" "zonal" {
   count   = "${var.zonal ? 1 : 0}"
-  name    = "${element(concat(google_compute_instance_group_manager.default.*.name, list("unused")), 0)}"
   zone    = "${var.zone}"
   project = "${var.project}"
+
+  // Use the dependency id which is recreated whenever the instance template changes to signal when to re-read the data source.
+  name = "${element(split("|", "${null_resource.dummy_dependency.id}|${element(concat(google_compute_instance_group_manager.default.*.name, list("unused")), 0)}"), 1)}"
 }
