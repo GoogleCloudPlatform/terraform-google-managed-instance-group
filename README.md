@@ -5,25 +5,18 @@ Modular Google Compute Engine managed instance group for Terraform.
 ## Usage
 
 ```ruby
-data "template_file" "php-startup-script" {
-  template = "${file("${format("%s/../scripts/gceme.sh.tpl", path.module)}")}"
-  vars {
-    PROXY_PATH = ""
-  }
-}
-
 module "mig1" {
-  source            = "GoogleCloudPlatform/managed-instance-group/google#v1.1.7"
-  version           = "1.1.7"
+  source            = "GoogleCloudPlatform/managed-instance-group/google"
+  version           = "1.1.13"
   region            = "${var.region}"
   zone              = "${var.zone}"
   name              = "group1"
   size              = 2
   service_port      = 80
   service_port_name = "http"
+  http_health_check = false
   target_pools      = ["${module.gce-lb-fr.target_pool}"]
   target_tags       = ["allow-service1"]
-  startup_script    = "${data.template_file.php-startup-script.rendered}"
   ssh_source_ranges = ["0.0.0.0/0"]
 }
 ```
