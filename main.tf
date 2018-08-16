@@ -132,6 +132,8 @@ locals {
     default = ["${data.google_compute_zones.available.names}"]
     user    = ["${var.distribution_policy_zones}"]
   }
+
+  dependency_id = "${element(concat(null_resource.region_dummy_dependency.*.id, list("disabled")), 0)}"
 }
 
 resource "google_compute_region_instance_group_manager" "default" {
@@ -272,5 +274,5 @@ data "google_compute_instance_group" "zonal" {
   project = "${var.project}"
 
   // Use the dependency id which is recreated whenever the instance template changes to signal when to re-read the data source.
-  name = "${element(split("|", "${null_resource.dummy_dependency.id}|${element(concat(google_compute_instance_group_manager.default.*.name, list("unused")), 0)}"), 1)}"
+  name = "${element(split("|", "${local.dependency_id}|${element(concat(google_compute_instance_group_manager.default.*.name, list("unused")), 0)}"), 1)}"
 }

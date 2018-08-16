@@ -11,6 +11,14 @@ variable "zone" {
   default = "us-central1-b"
 }
 
+variable "module_enabled" {
+  default = true
+}
+
+variable "http_health_check" {
+  default = true
+}
+
 provider "google" {
   region = "${var.region}"
 }
@@ -46,6 +54,7 @@ data "google_compute_zones" "available" {
 
 module "mig1" {
   source             = "../../"
+  module_enabled     = "${var.module_enabled}"
   region             = "${var.region}"
   zone               = "${var.zone}"
   zonal              = true
@@ -59,6 +68,7 @@ module "mig1" {
   network            = "${google_compute_subnetwork.default.name}"
   subnetwork         = "${google_compute_subnetwork.default.name}"
   instance_labels    = "${var.labels}"
+  http_health_check  = "${var.http_health_check}"
   update_strategy    = "ROLLING_UPDATE"
 
   rolling_update_policy = [{
@@ -70,26 +80,14 @@ module "mig1" {
   }]
 }
 
-// null resource used to create dependency with the instance group data source to trigger a refresh.
-resource "null_resource" "template" {
-  triggers {
-    instance_template = "${element(module.mig1.instance_template, 0)}"
-  }
-}
-
-data "google_compute_instance_group" "mig1" {
-  self_link  = "${module.mig1.instance_group}"
-  depends_on = ["null_resource.template"]
-}
-
 output "instance_self_link_1" {
-  value = "${data.google_compute_instance_group.mig1.instances[0]}"
+  value = "${element(module.mig1.instances[0], 0)}"
 }
 
 output "instance_self_link_2" {
-  value = "${data.google_compute_instance_group.mig1.instances[1]}"
+  value = "${element(module.mig1.instances[0], 1)}"
 }
 
 output "instance_self_link_3" {
-  value = "${data.google_compute_instance_group.mig1.instances[2]}"
+  value = "${element(module.mig1.instances[0], 2)}"
 }
