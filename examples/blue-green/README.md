@@ -78,6 +78,8 @@ TF_VAR_deploy_color=green terraform apply
 echo http://$(terraform output load-balancer-ip)
 ```
 
+You should see the example web page with __green__ color.
+
 ## Cleanup
 
 1. Remove all resources created by terraform:
