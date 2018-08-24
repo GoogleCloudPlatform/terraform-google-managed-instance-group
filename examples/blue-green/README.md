@@ -7,7 +7,7 @@ This example shows how to perform a blue/green deployment using the managed inst
 ## Change to the example directory
 
 ```
-[[ `basename $PWD` != basic ]] && cd examples/blue-green
+[[ `basename $PWD` != blue-green ]] && cd examples/blue-green
 ```
 
 ## Install Terraform
