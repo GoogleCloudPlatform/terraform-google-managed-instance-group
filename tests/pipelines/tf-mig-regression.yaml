@@ -122,6 +122,57 @@ jobs:
     file: git/tests/tasks/example-mig.yaml
 
 ###
+# run-example-blue-green
+###
+- name: run-example-blue-green
+  serial: true
+  plan:
+  - get: once-a-day
+    trigger: true
+
+  - get: git
+    trigger: false
+
+  - task: run-example-blue-green
+    params:
+      git_src: git
+      git_target: git
+      service_account_json: ((regression-project.service_account_json))
+      project_id: ((regression-project.project_id))
+      backend_bucket: {{backend_bucket}}
+      backend_prefix: terraform-google-managed-instance-group/
+      env_name: tf-ci-mig-blue-green
+      example_dir: examples/blue-green
+      region: us-central1
+      zone: us-central1-f
+      TF_VAR_network_name: tf-ci-mig-blue-green
+      TF_VAR_region: us-central1
+      TF_VAR_zone: us-central1-f
+      add_test_script: |
+        TF_VAR_deploy_color=green terraform plan -lock=false -no-color -out terraform.tfplan
+        terraform apply -no-color -input=false -lock=false -auto-approve terraform.tfplan | tee ${EMAIL}/body-failed
+        ./test.sh
+    on_failure:
+      put: send-an-email
+      params:
+        subject: email/subject-failed
+        body: email/body-failed
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: gcr.io/cloud-solutions-group/tf-run-example
+          tag: latest
+      inputs:
+      - name: git
+      - name: git-pull-requests
+        optional: true
+      outputs:
+      - name: email
+      run: {path: /opt/run-example.sh}
+
+###
 # Resource types
 ###
 resource_types:
