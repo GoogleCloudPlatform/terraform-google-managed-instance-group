@@ -54,7 +54,7 @@ variable name {
 }
 
 variable size {
-  description = "Target size of the manged instance group."
+  description = "Target size of the managed instance group."
   default     = 1
 }
 
