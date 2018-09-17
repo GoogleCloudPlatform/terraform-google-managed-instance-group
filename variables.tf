@@ -201,6 +201,11 @@ variable disk_size_gb {
   default     = 0
 }
 
+variable "preemptible" {
+  description = "Use preemptible instances - lower price but short-lived instances. See https://cloud.google.com/compute/docs/instances/preemptible for more details"
+  default     = "false"
+}
+
 /* Autoscaling */
 variable autoscaling {
   description = "Enable autoscaling."
