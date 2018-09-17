@@ -57,7 +57,8 @@ resource "google_compute_instance_template" "default" {
   )}"
 
   scheduling {
-    preemptible = "${var.preemptible}"
+    preemptible       = "${var.preemptible}"
+    automatic_restart = "${var.automatic_restart}"
   }
 
   lifecycle {

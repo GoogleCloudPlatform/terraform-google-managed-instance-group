@@ -206,6 +206,11 @@ variable "preemptible" {
   default     = "false"
 }
 
+variable "automatic_restart" {
+  description = "Automatically restart the instance if terminated by GCP - Set to false if using preemptible instances"
+  default     = "true"
+}
+
 /* Autoscaling */
 variable autoscaling {
   description = "Enable autoscaling."
