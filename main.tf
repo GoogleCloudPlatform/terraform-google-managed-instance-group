@@ -56,6 +56,11 @@ resource "google_compute_instance_template" "default" {
     var.metadata
   )}"
 
+  scheduling {
+    preemptible       = "${var.preemptible}"
+    automatic_restart = "${var.automatic_restart}"
+  }
+
   lifecycle {
     create_before_destroy = true
   }
