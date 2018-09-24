@@ -44,6 +44,7 @@ resource "google_compute_instance_template" "default" {
     type         = "PERSISTENT"
     disk_type    = "${var.disk_type}"
     disk_size_gb = "${var.disk_size_gb}"
+    mode         = "${var.mode}"
   }
 
   service_account {

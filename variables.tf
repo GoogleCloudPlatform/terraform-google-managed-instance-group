@@ -66,7 +66,10 @@ variable startup_script {
 variable access_config {
   description = "The access config block for the instances. Set to [] to remove external IP."
   type        = "list"
-  default     = [{}]
+
+  default = [
+    {},
+  ]
 }
 
 variable metadata {
@@ -199,6 +202,11 @@ variable disk_type {
 variable disk_size_gb {
   description = "The size of the image in gigabytes. If not specified, it will inherit the size of its base image."
   default     = 0
+}
+
+variable mode {
+  description = "The mode in which to attach this disk, either READ_WRITE or READ_ONLY."
+  default     = "READ_WRITE"
 }
 
 variable "preemptible" {
