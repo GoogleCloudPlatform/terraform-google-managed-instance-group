@@ -95,7 +95,7 @@ variable machine_type {
 
 variable compute_image {
   description = "Image used for compute VMs."
-  default     = "debian-cloud/debian-9"
+  default     = "projects/debian-cloud/global/images/family/debian-9"
 }
 
 variable wait_for_instances {
