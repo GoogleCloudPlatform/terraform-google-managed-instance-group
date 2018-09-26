@@ -7,7 +7,7 @@ Modular Google Compute Engine managed instance group for Terraform.
 ```ruby
 module "mig1" {
   source            = "GoogleCloudPlatform/managed-instance-group/google"
-  version           = "1.1.13"
+  version           = "1.1.14"
   region            = "${var.region}"
   zone              = "${var.zone}"
   name              = "group1"
