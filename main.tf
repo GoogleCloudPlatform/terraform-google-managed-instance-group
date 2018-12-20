@@ -244,7 +244,7 @@ resource "google_compute_firewall" "default-ssh" {
 }
 
 resource "google_compute_health_check" "mig-health-check" {
-  count   = "${var.http_health_check ? 1 : 0}"
+  count   = "${var.module_enabled && var.http_health_check ? 1 : 0}"
   name    = "${var.name}"
   project = "${var.project}"
 
@@ -260,7 +260,7 @@ resource "google_compute_health_check" "mig-health-check" {
 }
 
 resource "google_compute_firewall" "mig-health-check" {
-  count   = "${var.http_health_check ? 1 : 0}"
+  count   = "${var.module_enabled && var.http_health_check ? 1 : 0}"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-hc"
   network = "${var.network}"
