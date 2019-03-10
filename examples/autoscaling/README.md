@@ -8,8 +8,15 @@ Configure your environment to use your default Google Cloud credentials:
 
 ```bash
 gcloud auth application-default login
-export GOOGLE_PROJECT=$(gcloud config get-value project)
 ```
+Get your list of projects with e.g. 
+```bash
+gcloud projects list
+```
+and choose appropriate 'PROJECT_ID' then export with 
+```bash
+ export TF_VAR_project=(your_project_id)
+ ```
 
 ## Run Terraform
 
@@ -20,6 +27,8 @@ terraform init
 terraform plan
 terraform apply
 ```
+
+The public IP for the service is displayed as an output of the plan. In case it is not ready:
 
 Open URL of load balancer in browser after the load balancer is ready:
 
@@ -55,3 +64,18 @@ Remove all resources created by terraform:
 ```bash
 terraform destroy
 ```
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+| network\_name |  | string | `"mig-autoscale-example"` | no |
+| project | The name for our project | string | n/a | yes |
+| region |  | string | `"us-central1"` | no |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| instance\_self\_link |  |
+| instance\_status |  |
+| service\_public\_ip | Public IP address to reach and test our deployment |
