@@ -15,10 +15,9 @@
  */
 
 resource "google_compute_instance_template" "default" {
-  count       = "${var.module_enabled ? 1 : 0}"
-  project     = "${var.project}"
-  name_prefix = "default-"
-
+  count        = "${var.module_enabled ? 1 : 0}"
+  project      = "${var.project}"
+  name_prefix  = "default-"
   machine_type = "${var.machine_type}"
 
   region = "${var.region}"
@@ -72,13 +71,11 @@ provider "google-beta" {
 }
 
 resource "google_compute_instance_group_manager" "default" {
-  provider           = "google-beta"
   count              = "${var.module_enabled && var.zonal ? 1 : 0}"
   project            = "${var.project}"
   name               = "${var.name}"
   description        = "compute VM Instance Group"
   wait_for_instances = "${var.wait_for_instances}"
-
   base_instance_name = "${var.name}"
 
   version {
@@ -86,8 +83,7 @@ resource "google_compute_instance_group_manager" "default" {
     instance_template = "${google_compute_instance_template.default.self_link}"
   }
 
-  zone = "${var.zone}"
-
+  zone          = "${var.zone}"
   update_policy = "${var.update_policy}"
 
   target_pools = ["${var.target_pools}"]
@@ -157,7 +153,11 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   base_instance_name = "${var.name}"
 
-  instance_template = "${google_compute_instance_template.default.self_link}"
+  # instance_template = "${google_compute_instance_template.default.self_link}"
+  version {
+    name              = "${var.name}-default"
+    instance_template = "${google_compute_instance_template.default.self_link}"
+  }
 
   region = "${var.region}"
 
