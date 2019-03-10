@@ -3,3 +3,6 @@
 **/backend.tf
 **/terraform.tfvars
 **/values-*.yaml
+./examples/autoscaling/.terraform/
+./examples/autoscaling/terraform.tfstate
+./examples/autoscaling/terraform.tfstate.backup
