@@ -2,7 +2,7 @@ variable "region" {
   default = "us-central1"
 }
 
-provider "google" {
+provider "google-beta" {
   region = "${var.region}"
 }
 
@@ -10,9 +10,14 @@ variable "network_name" {
   default = "mig-autoscale-example"
 }
 
+variable "project" {
+  description = "The name for our project"
+}
+
 resource "google_compute_network" "default" {
   name                    = "${var.network_name}"
   auto_create_subnetworks = "false"
+  project                 = "${var.project}"
 }
 
 resource "google_compute_subnetwork" "default" {
@@ -21,6 +26,7 @@ resource "google_compute_subnetwork" "default" {
   network                  = "${google_compute_network.default.self_link}"
   region                   = "${var.region}"
   private_ip_google_access = true
+  project                  = "${var.project}"
 }
 
 data "template_file" "startup-script" {
@@ -32,6 +38,10 @@ data "template_file" "startup-script" {
 }
 
 module "mig1" {
+  providers {
+    "google" = "google-beta"
+  }
+
   source             = "../../"
   region             = "${var.region}"
   zonal              = false
@@ -55,9 +65,14 @@ module "mig1" {
   target_pools      = ["${module.gce-lb-fr.target_pool}"]
   network           = "${google_compute_subnetwork.default.name}"
   subnetwork        = "${google_compute_subnetwork.default.name}"
+  project           = "${var.project}"
 }
 
 module "gce-lb-fr" {
+  providers {
+    "google" = "google-beta"
+  }
+
   source       = "GoogleCloudPlatform/lb/google"
   version      = "1.0.2"
   region       = "${var.region}"
@@ -65,6 +80,7 @@ module "gce-lb-fr" {
   service_port = "${module.mig1.service_port}"
   target_tags  = ["${module.mig1.target_tags}"]
   network      = "${google_compute_subnetwork.default.name}"
+  project      = "${var.project}"
 }
 
 // null resource used to create dependency with the instance group data source to trigger a refresh.
@@ -85,4 +101,9 @@ output "instance_self_link" {
 
 output "instance_status" {
   value = "${lookup(data.google_compute_region_instance_group.mig1.instances[0], "status")}"
+}
+
+output "service_public_ip" {
+  description = "Public IP address to reach and test our deployment"
+  value       = "${module.gce-lb-fr.external_ip}"
 }
