@@ -275,3 +275,10 @@ variable hc_path {
   description = "Health check, the http path to check."
   default     = "/"
 }
+
+variable template_labels {
+  description = "A dictionary of labels to append to the default template."
+  default     = {
+    "templatetype" = "placeholder"
+  }
+}

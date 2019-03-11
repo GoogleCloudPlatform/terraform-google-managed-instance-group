@@ -19,6 +19,8 @@ resource "google_compute_instance_template" "default" {
   project     = "${var.project}"
   name_prefix = "${var.name}-"
 
+  labels = "${var.template_labels}"
+
   machine_type = "${var.machine_type}"
 
   region = "${var.region}"
