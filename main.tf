@@ -66,10 +66,6 @@ resource "google_compute_instance_template" "default" {
   }
 }
 
-provider "google-beta" {
-  version = ">= 2.0.0"
-}
-
 resource "google_compute_instance_group_manager" "default" {
   count              = "${var.module_enabled && var.zonal ? 1 : 0}"
   project            = "${var.project}"
