@@ -23,14 +23,6 @@ resource "google_compute_instance_template" "default" {
 
   region = var.region
 
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
   tags = concat(["allow-ssh"], var.target_tags)
 
   labels = var.instance_labels
@@ -41,13 +33,6 @@ resource "google_compute_instance_template" "default" {
     dynamic "access_config" {
       for_each = [var.access_config]
       content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #nat_ip       = lookup(access_config.value, "nat_ip", null)
-        #network_tier = lookup(access_config.value, "network_tier", null)
       }
     }
     network_ip            = var.network_ip
@@ -103,25 +88,6 @@ resource "google_compute_instance_group_manager" "default" {
   zone = var.zone
 
   update_strategy = var.update_strategy
-  #rolling_update_policy = var.rolling_update_policy
-
-  #dynamic "rolling_update_policy" {
-   # for_each = [var.rolling_update_policy]
-   # content {
-      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-      # which keys might be set in maps assigned here, so it has
-      # produced a comprehensive set here. Consider simplifying
-      # this after confirming which keys can be set in practice.
-
-      #max_surge_fixed         = lookup(rolling_update_policy.value, "max_surge_fixed", null)
-      #max_surge_percent       = lookup(rolling_update_policy.value, "max_surge_percent", null)
-      #max_unavailable_fixed   = lookup(rolling_update_policy.value, "max_unavailable_fixed", null)
-      #max_unavailable_percent = lookup(rolling_update_policy.value, "max_unavailable_percent", null)
-      #min_ready_sec           = lookup(rolling_update_policy.value, "min_ready_sec", null)
-      #minimal_action          = rolling_update_policy.value.minimal_action
-      #type                    = rolling_update_policy.value.type
-  #  }
-  #}
 
   target_pools = var.target_pools
 
@@ -133,17 +99,6 @@ resource "google_compute_instance_group_manager" "default" {
     name = var.service_port_name
     port = var.service_port
   }
-
-  #auto_healing_policies {
-  #  health_check = var.http_health_check ? element(
-  #    concat(
-  #      google_compute_health_check.mig-health-check.*.self_link,
-  #      [""],
-  #    ),
-  #    0,
-  #  ) : ""
-  #  initial_delay_sec = var.hc_initial_delay
-  #}
 
   provisioner "local-exec" {
     when    = destroy
@@ -167,55 +122,12 @@ resource "google_compute_autoscaler" "default" {
     max_replicas    = var.max_replicas
     min_replicas    = var.min_replicas
     cooldown_period = var.cooldown_period
-    #cpu_utilization = var.autoscaling_cpu
-    #metric          = var.autoscaling_metric
-    #load_balancing_utilization = var.autoscaling_lb
-
-
-    #dynamic "cpu_utilization" {
-    #  for_each = [var.autoscaling_cpu]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #target = cpu_utilization.value.target
-    #  }
-    #}
-
-    #dynamic "metric" {
-    #  for_each = [var.autoscaling_metric]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #name   = metric.value.name
-        #target = lookup(metric.value, "target", null)
-        #type   = lookup(metric.value, "type", null)
-    #  }
-    #}
-    #dynamic "load_balancing_utilization" {
-    #  for_each = [var.autoscaling_lb]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #target = load_balancing_utilization.value.target
-     # }
-    #}
   }
 }
 
 data "google_compute_zones" "available" {
-  #project = var.project
-  #region  = var.region
-  project = "qwiklabs-gcp-4b868c4a71652f2d"
-  region  = "us-central1"
+  project = var.project
+  region  = var.region
 }
 
 locals {
@@ -243,34 +155,6 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   region = var.region
 
-  #update_strategy = var.update_strategy
-
-  #dynamic "rolling_update_policy" {
-  #  for_each = [var.rolling_update_policy]
-  #  content {
-      # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-      # which keys might be set in maps assigned here, so it has
-      # produced a comprehensive set here. Consider simplifying
-      # this after confirming which keys can be set in practice.
-
-      #max_surge_fixed         = lookup(rolling_update_policy.value, "max_surge_fixed", null)
-      #max_surge_percent       = lookup(rolling_update_policy.value, "max_surge_percent", null)
-      #max_unavailable_fixed   = lookup(rolling_update_policy.value, "max_unavailable_fixed", null)
-      #max_unavailable_percent = lookup(rolling_update_policy.value, "max_unavailable_percent", null)
-      #min_ready_sec           = lookup(rolling_update_policy.value, "min_ready_sec", null)
-      #minimal_action          = rolling_update_policy.value.minimal_action
-      #type                    = rolling_update_policy.value.type
-   # }
-  #}
-
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
   distribution_policy_zones = [local.distribution_zones[length(var.distribution_policy_zones) == 0 ? "default" : "user"]]
 
   target_pools = var.target_pools
@@ -322,41 +206,6 @@ resource "google_compute_region_autoscaler" "default" {
     max_replicas    = var.max_replicas
     min_replicas    = var.min_replicas
     cooldown_period = var.cooldown_period
-    #dynamic "cpu_utilization" {
-    #  for_each = [var.autoscaling_cpu]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #target = cpu_utilization.value.target
-    #  }
-    #}
-    #dynamic "metric" {
-    #  for_each = [var.autoscaling_metric]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #name   = metric.value.name
-        #target = lookup(metric.value, "target", null)
-        #type   = lookup(metric.value, "type", null)
-     # }
-    #}
-    #dynamic "load_balancing_utilization" {
-    #  for_each = [var.autoscaling_lb]
-    #  content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
-
-        #target = load_balancing_utilization.value.target
-    #  }
-    #}
   }
 }
 
