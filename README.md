@@ -1,5 +1,7 @@
 # Managed Instance Group Terraform Module
 
+## NOTE: This module is no longer maintained. Please use [this module](https://github.com/terraform-google-modules/terraform-google-vm/tree/master/modules/mig) instead.
+
 Modular Google Compute Engine managed instance group for Terraform.
 
 ## Usage
