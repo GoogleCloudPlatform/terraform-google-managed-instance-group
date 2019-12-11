@@ -96,7 +96,7 @@ resource "google_compute_instance_group_manager" "default" {
   }
 
   auto_healing_policies = {
-    health_check      = "${var.http_health_check ? element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0) : ""}"
+     health_check      = "${var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) : var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) : var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""}"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
@@ -168,7 +168,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   target_size = "${var.autoscaling ? var.min_replicas : var.size}"
 
   auto_healing_policies {
-    health_check      = "${var.http_health_check ? element(concat(google_compute_health_check.mig-health-check.*.self_link, list("")), 0) : ""}"
+    health_check      = "${var.health_check == "http" ? element(concat(google_compute_health_check.mig-health-check-http.*.self_link, list("")), 0) : var.health_check == "https" ? element(concat(google_compute_health_check.mig-health-check-https.*.self_link, list("")), 0) : var.health_check == "tcp" ? element(concat(google_compute_health_check.mig-health-check-tcp.*.self_link, list("")), 0) : var.health_check == "ssl" ? element(concat(google_compute_health_check.mig-health-check-ssl.*.self_link, list("")), 0) : ""}"
     initial_delay_sec = "${var.hc_initial_delay}"
   }
 
@@ -189,7 +189,7 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   // Initial instance verification can take 10-15m when a health check is present.
   timeouts = {
-    create = "${var.http_health_check ? "15m" : "5m"}"
+    create = "${var.health_check == "http" || var.health_check == "https" || var.health_check == "tcp" || var.health_check == "ssl" ? "15m" : "5m"}"
   }
 }
 
@@ -243,8 +243,8 @@ resource "google_compute_firewall" "default-ssh" {
   target_tags   = ["allow-ssh"]
 }
 
-resource "google_compute_health_check" "mig-health-check" {
-  count   = "${var.module_enabled && var.http_health_check ? 1 : 0}"
+resource "google_compute_health_check" "mig-health-check-http" {
+  count   = "${var.health_check == "http" ? 1 : 0}"
   name    = "${var.name}"
   project = "${var.project}"
 
@@ -259,8 +259,55 @@ resource "google_compute_health_check" "mig-health-check" {
   }
 }
 
+resource "google_compute_health_check" "mig-health-check-https" {
+  count   = "${var.health_check == "https" ? 1 : 0}"
+  name    = "${var.name}"
+  project = "${var.project}"
+
+  check_interval_sec  = "${var.hc_interval}"
+  timeout_sec         = "${var.hc_timeout}"
+  healthy_threshold   = "${var.hc_healthy_threshold}"
+  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
+
+  https_health_check {
+    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
+    request_path = "${var.hc_path}"
+  }
+}
+
+resource "google_compute_health_check" "mig-health-check-tcp" {
+  count   = "${var.health_check == "tcp" ? 1 : 0}"
+  name    = "${var.name}"
+  project = "${var.project}"
+
+  check_interval_sec  = "${var.hc_interval}"
+  timeout_sec         = "${var.hc_timeout}"
+  healthy_threshold   = "${var.hc_healthy_threshold}"
+  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
+
+  tcp_health_check {
+    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
+  }
+}
+
+resource "google_compute_health_check" "mig-health-check-ssl" {
+  count   = "${var.health_check == "ssl" ? 1 : 0}"
+  name    = "${var.name}"
+  project = "${var.project}"
+
+  check_interval_sec  = "${var.hc_interval}"
+  timeout_sec         = "${var.hc_timeout}"
+  healthy_threshold   = "${var.hc_healthy_threshold}"
+  unhealthy_threshold = "${var.hc_unhealthy_threshold}"
+
+  ssl_health_check {
+    port         = "${var.hc_port == "" ? var.service_port : var.hc_port}"
+    request_path = "${var.hc_path}"
+  }
+}
+
 resource "google_compute_firewall" "mig-health-check" {
-  count   = "${var.module_enabled && var.http_health_check ? 1 : 0}"
+  count   = "${var.health_check == "http" || var.health_check == "https" || var.health_check == "tcp" || var.health_check == "ssl" ? 1 : 0}"
   project = "${var.subnetwork_project == "" ? var.project : var.subnetwork_project}"
   name    = "${var.name}-vm-hc"
   network = "${var.network}"
