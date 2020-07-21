@@ -204,9 +204,10 @@ resource "null_resource" "region_dummy_dependency" {
 }
 
 resource "google_compute_health_check" "mig-https-health-check" {
-  count   = "${var.health_check_type == "HTTPS" ? 1 : 0}"
-  name    = "${var.name}"
-  project = "${var.project}"
+  provider = "google-beta"
+  count    = "${var.health_check_type == "HTTPS" ? 1 : 0}"
+  name     = "${var.name}"
+  project  = "${var.project}"
 
   check_interval_sec  = "${var.hc_interval}"
   timeout_sec         = "${var.hc_timeout}"
@@ -220,9 +221,10 @@ resource "google_compute_health_check" "mig-https-health-check" {
 }
 
 resource "google_compute_health_check" "mig-http-health-check" {
-  count   = "${var.health_check_type == "HTTP" ? 1 : 0}"
-  name    = "${var.name}"
-  project = "${var.project}"
+  provider = "google-beta"
+  count    = "${var.health_check_type == "HTTP" ? 1 : 0}"
+  name     = "${var.name}"
+  project  = "${var.project}"
 
   check_interval_sec  = "${var.hc_interval}"
   timeout_sec         = "${var.hc_timeout}"
