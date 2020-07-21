@@ -231,7 +231,7 @@ variable autoscaling_lb {
 
 variable health_check_type {
   description = "Describes the type of health check required. Valid values are empty, HTTP or HTTPS"
-  default = "HTTP"
+  default     = "HTTP"
 }
 
 /* Health checks */
@@ -273,7 +273,8 @@ variable hc_path {
 
 variable template_labels {
   description = "A dictionary of labels to append to the default template."
-  default     = {
+
+  default = {
     "templatetype" = "placeholder"
   }
 }
