@@ -133,7 +133,10 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   base_instance_name = "${var.name}"
 
-  instance_template = "${google_compute_instance_template.default.self_link}"
+  version = {
+    name              = "${var.name}"
+    instance_template = "${google_compute_instance_template.default.self_link}"
+  }
 
   region = "${var.region}"
 
