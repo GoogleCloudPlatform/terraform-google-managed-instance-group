@@ -140,7 +140,7 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   update_strategy = "${var.update_strategy}"
 
-  rolling_update_policy = ["${var.rolling_update_policy}"]
+  update_policy = ["${var.update_policy}"]
 
   distribution_policy_zones = ["${var.distribution_policy_zones}"]
 

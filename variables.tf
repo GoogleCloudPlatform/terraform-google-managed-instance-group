@@ -105,7 +105,7 @@ variable update_strategy {
   default     = "RESTART"
 }
 
-variable rolling_update_policy {
+variable update_policy {
   description = "The rolling update policy when update_strategy is ROLLING_UPDATE"
   type        = "list"
   default     = []
