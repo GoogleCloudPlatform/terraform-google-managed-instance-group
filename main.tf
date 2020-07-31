@@ -133,11 +133,6 @@ resource "google_compute_region_instance_group_manager" "default" {
 
   base_instance_name = "${var.name}"
 
-  version = {
-    name              = "${var.name}"
-    instance_template = "${google_compute_instance_template.default.self_link}"
-  }
-
   region = "${var.region}"
 
   update_policy = ["${var.update_policy}"]
@@ -160,6 +155,11 @@ resource "google_compute_region_instance_group_manager" "default" {
     port = "${var.service_port}"
   }
 
+  version {
+    name              = "${var.name}"
+    instance_template = "${google_compute_instance_template.default.self_link}"
+  }
+
   provisioner "local-exec" {
     when    = "destroy"
     command = "${var.local_cmd_destroy}"
@@ -172,7 +172,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   }
 
   lifecycle {
-    ignore_changes = ["instance_template", "distribution_policy_zone", "target_size"]
+    ignore_changes = ["version", "instance_template", "distribution_policy_zone", "target_size"]
   }
 }
 
