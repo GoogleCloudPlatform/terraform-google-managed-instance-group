@@ -65,13 +65,13 @@ variable startup_script {
 
 variable access_config {
   description = "The access config block for the instances. Set to [] to remove external IP."
-  type        = "list"
+  type        = list
   default     = [{}]
 }
 
 variable metadata {
   description = "Map of metadata values to pass to instances."
-  type        = "map"
+  type        = map
   default     = {}
 }
 
@@ -102,7 +102,7 @@ variable wait_for_instances {
 
 variable update_policy {
   description = "The rolling update policy when update_strategy is ROLLING_UPDATE"
-  type        = "list"
+  type        = list
   default     = []
 }
 
@@ -116,13 +116,13 @@ variable service_port_name {
 
 variable target_tags {
   description = "Tag added to instances for firewall and networking."
-  type        = "list"
+  type        = list
   default     = ["allow-service"]
 }
 
 variable target_pools {
   description = "The target load balancing pools to assign this group to."
-  type        = "list"
+  type        = list
   default     = []
 }
 
@@ -136,11 +136,6 @@ variable local_cmd_create {
   default     = ":"
 }
 
-variable local_cmd_destroy {
-  description = "Command to run on destroy as local-exec provisioner for the instance group manager."
-  default     = ":"
-}
-
 variable service_account_email {
   description = "The email of the service account for the instance template."
   default     = "default"
@@ -148,7 +143,7 @@ variable service_account_email {
 
 variable service_account_scopes {
   description = "List of scopes for the instance template service account"
-  type        = "list"
+  type        = list
 
   default = [
     "https://www.googleapis.com/auth/compute",
@@ -165,13 +160,13 @@ variable zonal {
 
 variable distribution_policy_zones {
   description = "The distribution policy for this managed instance group when zonal=false."
-  type        = "list"
+  type        = list
   default     = []
 }
 
 variable ssh_source_ranges {
   description = "Network ranges to allow SSH from"
-  type        = "list"
+  type        = list
   default     = ["0.0.0.0/0"]
 }
 
@@ -213,19 +208,19 @@ variable cooldown_period {
 
 variable autoscaling_cpu {
   description = "Autoscaling, cpu utilization policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#cpu_utilization"
-  type        = "list"
+  type        = list
   default     = []
 }
 
 variable autoscaling_metric {
   description = "Autoscaling, metric policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#metric"
-  type        = "list"
+  type        = list
   default     = []
 }
 
 variable autoscaling_lb {
   description = "Autoscaling, load balancing utilization policy block as single element array. https://www.terraform.io/docs/providers/google/r/compute_autoscaler.html#load_balancing_utilization"
-  type        = "list"
+  type        = list
   default     = []
 }
 
