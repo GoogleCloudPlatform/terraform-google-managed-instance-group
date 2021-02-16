@@ -208,7 +208,7 @@ resource "google_compute_region_instance_group_manager" "default" {
   }
 
   lifecycle {
-    ignore_changes = [update_policy, auto_healing_policies, version, distribution_policy_zones, target_size]
+    ignore_changes = [version, distribution_policy_zones, target_size]
   }
 }
 
