@@ -118,6 +118,7 @@ resource "google_compute_autoscaler" "default" {
   name    = var.name
   zone    = var.zone
   project = var.project
+  provider = google-beta
   target  = google_compute_instance_group_manager.default[count.index].self_link
 
   autoscaling_policy {
@@ -228,6 +229,7 @@ resource "google_compute_region_autoscaler" "default" {
   name    = var.name
   region  = var.region
   project = var.project
+  provider = google-beta
   target  = google_compute_region_instance_group_manager.default[count.index].self_link
 
   autoscaling_policy {
