@@ -149,6 +149,17 @@ resource "google_compute_autoscaler" "default" {
         target = load_balancing_utilization.value["target"]
       }
     }
+    dynamic "scaling_schedules" {
+      for_each = var.scaling_schedules
+      
+      content {
+        name = scaling_schedules.value["name"]
+        min_required_replicas = scaling_schedules.value["min_required_replicas"]
+        schedule = scaling_schedules.value["schedule"]
+        duration_sec = scaling_schedules.value["duration_sec"]
+        description = scaling_schedules.value["Austoscaling schedules for MIG"]
+      }
+    }
   }
 }
 
@@ -247,6 +258,17 @@ resource "google_compute_region_autoscaler" "default" {
 
       content {
         target = load_balancing_utilization.value["target"]
+      }
+    }
+    dynamic "scaling_schedules" {
+      for_each = var.scaling_schedules
+      
+      content {
+        name = scaling_schedules.value["name"]
+        min_required_replicas = scaling_schedules.value["min_required_replicas"]
+        schedule = scaling_schedules.value["schedule"]
+        duration_sec = scaling_schedules.value["duration_sec"]
+        description = scaling_schedules.value["Austoscaling schedules for MIG"]
       }
     }
   }
