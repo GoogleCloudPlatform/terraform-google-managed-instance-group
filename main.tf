@@ -158,7 +158,7 @@ resource "google_compute_autoscaler" "default" {
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]
-        description = scaling_schedules.value["description"]
+        # description = scaling_schedules.value["description"]
       }
     }
   }
@@ -270,7 +270,7 @@ resource "google_compute_region_autoscaler" "default" {
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]
-        description = scaling_schedules.value["description"]
+        # description = scaling_schedules.value["description"]
       }
     }
   }
