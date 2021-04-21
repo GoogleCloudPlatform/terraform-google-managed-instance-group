@@ -273,6 +273,17 @@ resource "google_compute_region_autoscaler" "default" {
         # description = scaling_schedules.value["description"]
       }
     }
+    dynamic "scaling_schedules_west" {
+      for_each = var.scaling_schedules_west
+      
+      content {
+        name = scaling_schedules_west.value["name"]
+        min_required_replicas = scaling_schescaling_schedules_westdules.value["min_required_replicas"]
+        schedule = scaling_schedules_west.value["schedule"]
+        duration_sec = scaling_schedules_west.value["duration_sec"]
+        # description = scaling_schedules_west.value["description"]
+      }
+    }
   }
 }
 
