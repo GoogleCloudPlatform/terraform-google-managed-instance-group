@@ -166,7 +166,7 @@ resource "google_compute_autoscaler" "default" {
       
       content {
         name = scaling_schedules_west.value["name"]
-        min_required_replicas = scaling_schescaling_schedules_westdules.value["min_required_replicas"]
+        min_required_replicas = scaling_schedules_west.value["min_required_replicas"]
         schedule = scaling_schedules_west.value["schedule"]
         duration_sec = scaling_schedules_west.value["duration_sec"]
         # description = scaling_schedules_west.value["description"]
@@ -289,7 +289,7 @@ resource "google_compute_region_autoscaler" "default" {
       
       content {
         name = scaling_schedules_west.value["name"]
-        min_required_replicas = scaling_schescaling_schedules_westdules.value["min_required_replicas"]
+        min_required_replicas = scaling_schedules_west.value["min_required_replicas"]
         schedule = scaling_schedules_west.value["schedule"]
         duration_sec = scaling_schedules_west.value["duration_sec"]
         # description = scaling_schedules_west.value["description"]
