@@ -155,6 +155,7 @@ resource "google_compute_autoscaler" "default" {
       
       content {
         name = scaling_schedules.value["name"]
+        disabled = scaling_schedules.value["disabled"]
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]
@@ -267,6 +268,7 @@ resource "google_compute_region_autoscaler" "default" {
       
       content {
         name = scaling_schedules.value["name"]
+        disabled = scaling_schedules.value["disabled"]
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]

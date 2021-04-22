@@ -228,10 +228,6 @@ variable scaling_schedules {
   default = [{}]
 }
 
-# variable scaling_schedules_west {
-#   default = [{}]
-# }
-
 variable health_check_type {
   description = "Describes the type of health check required. Valid values are empty, HTTP or HTTPS"
   default     = "HTTP"
