@@ -158,18 +158,6 @@ resource "google_compute_autoscaler" "default" {
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]
-        # description = scaling_schedules.value["description"]
-      }
-    }
-    dynamic "scaling_schedules_west" {
-      for_each = var.scaling_schedules_west
-      
-      content {
-        name = scaling_schedules_west.value["name"]
-        min_required_replicas = scaling_schedules_west.value["min_required_replicas"]
-        schedule = scaling_schedules_west.value["schedule"]
-        duration_sec = scaling_schedules_west.value["duration_sec"]
-        # description = scaling_schedules_west.value["description"]
       }
     }
   }  
@@ -273,6 +261,7 @@ resource "google_compute_region_autoscaler" "default" {
         target = load_balancing_utilization.value["target"]
       }
     }
+    
     dynamic "scaling_schedules" {
       for_each = var.scaling_schedules
       
@@ -281,18 +270,6 @@ resource "google_compute_region_autoscaler" "default" {
         min_required_replicas = scaling_schedules.value["min_required_replicas"]
         schedule = scaling_schedules.value["schedule"]
         duration_sec = scaling_schedules.value["duration_sec"]
-        # description = scaling_schedules.value["description"]
-      }
-    }
-    dynamic "scaling_schedules_west" {
-      for_each = var.scaling_schedules_west
-      
-      content {
-        name = scaling_schedules_west.value["name"]
-        min_required_replicas = scaling_schedules_west.value["min_required_replicas"]
-        schedule = scaling_schedules_west.value["schedule"]
-        duration_sec = scaling_schedules_west.value["duration_sec"]
-        # description = scaling_schedules_west.value["description"]
       }
     }
   }
